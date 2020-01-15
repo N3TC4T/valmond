@@ -4,7 +4,6 @@
 #include <secp256k1.h>
 
 // Project includes
-// #include "address.hpp"
 #include "keys.hpp"
 
 // Signatures are 65 bytes:
@@ -18,7 +17,7 @@ namespace crypto {
 class Signature : public byteset<DEFINE_SIGNATURE_BYTES>
 {
 private:
-    [[nodiscard]] static const auto
+   [[nodiscard]] static const auto
     getContextSign();
 
     [[nodiscard]] static const auto
