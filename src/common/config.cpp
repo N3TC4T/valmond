@@ -92,7 +92,7 @@ Config::Config(std::string cfgFile)
     // get info from rippled config
     std::ifstream rippledConfigFileStream{rippled_config_path};
     if (!rippledConfigFileStream)
-        throw std::runtime_error("cannot open rippled config file" + rippled_config_path);
+        throw std::runtime_error("cannot open rippled config file " + rippled_config_path);
 
     std::string strSection;
     std::stringstream validatorToken;

@@ -10,11 +10,11 @@ import logging
 supported_archs = ["amd64", "i386", "armhf", "arm64"]
 BUILD="packaging/build"
 PACKAGING="packaging"
-AGENT="{0}/rippledagent".format(BUILD)
 
 DEV_DEPENDECIES = ['reprepro', 'createrepo']
 
 ROOT = os.path.abspath(os.path.dirname(__file__))
+BINARY="{0}/bin/rippledagent".format(ROOT)
 
 PACKAGES_PATH=os.path.join(ROOT, PACKAGING, 'distro')
 DEBIAN_REPO_PATH="{0}/debian/".format(PACKAGES_PATH)
@@ -29,7 +29,7 @@ def get_version():
 def compile_binary():
     # remove old bin
     try:
-        os.remove(os.path.join(ROOT, 'bin/rippledagent'))
+        os.remove(BINARY)
     except OSError:
         pass
 
@@ -41,7 +41,7 @@ def compile_binary():
     build_params.append("-DCMAKE_BUILD_TYPE=Release")
 
     command = [
-        "./build.sh",
+        "sh {0}/binary.sh".format(ROOT),
     ]
 
     command = command + build_params
@@ -55,8 +55,8 @@ def compile_binary():
 
 
 def create_package_fs():
-    shutil.rmtree(BUILD, ignore_errors=True)
     build_directory = os.path.join(ROOT, BUILD)
+    shutil.rmtree(build_directory, ignore_errors=True)
     packaging_directory = os.path.join(ROOT, PACKAGING)
 
     os.makedirs(build_directory)
@@ -64,13 +64,11 @@ def create_package_fs():
     os.makedirs(os.path.join(build_directory, 'opt', 'rippledagent'))
     os.makedirs(os.path.join(build_directory, "usr", 'bin'))
 
-    binary = os.path.join(ROOT, 'bin/rippledagent')
+    st = os.stat(BINARY)
+    os.chmod(BINARY, st.st_mode | stat.S_IEXEC)
 
-    st = os.stat(binary)
-    os.chmod(binary, st.st_mode | stat.S_IEXEC)
-
-    shutil.copyfile(binary, os.path.join(build_directory, 'opt', 'rippledagent', 'rippledagent'))
-    shutil.copyfile(binary, os.path.join(build_directory, 'usr', 'bin', 'rippledagent'))
+    shutil.copyfile(BINARY, os.path.join(build_directory, 'opt', 'rippledagent', 'rippledagent'))
+    shutil.copyfile(BINARY, os.path.join(build_directory, 'usr', 'bin', 'rippledagent'))
 
 
     os.makedirs(os.path.join(build_directory, "var", 'log', 'rippledagent'))
@@ -121,7 +119,7 @@ def fpm_build(arch=None, output=None):
         '--conflicts "rippledagent < {0}"'.format(get_version()),
         '--vendor XRPL-Labs',
         '--name rippledagent',
-        '--depends "sysstat"',
+        '--depends "curl"',
         '--architecture "{0}"'.format(arch),
         '--post-install {0}'.format(os.path.join(packaging_directory, 'postinst.sh')),
         '--post-uninstall {0}'.format(os.path.join(packaging_directory, 'postrm.sh')),
@@ -174,10 +172,12 @@ def run(command, allow_failure=False, shell=False, printOutput=False):
         return out
 
 def update_repositories():
-
-    os.makedirs(PACKAGES_PATH)
-    os.makedirs(DEBIAN_REPO_PATH)
-    os.makedirs(RPM_REPO_PATH)
+    try:
+        os.makedirs(PACKAGES_PATH)
+        os.makedirs(DEBIAN_REPO_PATH)
+        os.makedirs(RPM_REPO_PATH)
+    except OSError:
+        pass
 
     for file in glob.glob("*.deb"):
         logging.info("Copying {0} to {1}".format(file, DEBIAN_REPO_PATH))
@@ -207,9 +207,14 @@ if __name__ == '__main__':
     compile_binary()
     create_package_fs()
 
+    output = ["rpm", 'deb']
+
+    if(len(sys.argv) > 1):
+        output = [sys.argv[1]]
+
     for arch in supported_archs:
-        fpm_build(arch=arch, output='rpm')
-        fpm_build(arch=arch, output='deb')
+        for ext in output:
+            fpm_build(arch=arch, output=ext)
 
     update_repositories()
     cleanup()

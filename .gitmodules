@@ -1,0 +1,15 @@
+[submodule "deps/src/cryptopp"]
+        path = deps/src/cryptopp
+        url = https://github.com/weidai11/cryptopp/
+[submodule "builds/deps/src/cryptopp"]
+	path = builds/deps/src/cryptopp
+	url = https://github.com/weidai11/cryptopp/
+[submodule "builds/deps/src/secp256k1"]
+	path = builds/deps/src/secp256k1
+	url = https://github.com/bitcoin-core/secp256k1
+[submodule "builds/deps/src/jsoncpp"]
+	path = builds/deps/src/jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp
+[submodule "builds/deps/src/cryptopp-cmake"]
+	path = builds/deps/src/cryptopp-cmake
+	url = https://github.com/noloader/cryptopp-cmake
