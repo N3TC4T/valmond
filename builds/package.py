@@ -7,14 +7,12 @@ import shutil
 import glob
 import logging
 
-supported_archs = ["amd64", "i386", "armhf", "arm64"]
+supported_archs = ["amd64"]
 BUILD="packaging/build"
 PACKAGING="packaging"
 
-DEV_DEPENDECIES = ['reprepro', 'createrepo']
-
 ROOT = os.path.abspath(os.path.dirname(__file__))
-BINARY="{0}/bin/rippledagent".format(ROOT)
+BINARY="{0}/bin/valmond".format(ROOT)
 
 PACKAGES_PATH=os.path.join(ROOT, PACKAGING, 'distro')
 DEBIAN_REPO_PATH="{0}/debian/".format(PACKAGES_PATH)
@@ -34,7 +32,7 @@ def compile_binary():
         pass
 
     version = get_version()
-    logging.info("rippledagent version: {0}".format(version))
+    logging.info("valmond version: {0}".format(version))
     logging.info("Compiling binary")
 
     build_params = []
@@ -60,43 +58,43 @@ def create_package_fs():
     packaging_directory = os.path.join(ROOT, PACKAGING)
 
     os.makedirs(build_directory)
-    os.makedirs(os.path.join(build_directory, "etc", 'opt', 'rippledagent'))
-    os.makedirs(os.path.join(build_directory, 'opt', 'rippledagent'))
+    os.makedirs(os.path.join(build_directory, "etc", 'opt', 'valmond'))
+    os.makedirs(os.path.join(build_directory, 'opt', 'valmond'))
     os.makedirs(os.path.join(build_directory, "usr", 'bin'))
 
     st = os.stat(BINARY)
     os.chmod(BINARY, st.st_mode | stat.S_IEXEC)
 
-    shutil.copyfile(BINARY, os.path.join(build_directory, 'opt', 'rippledagent', 'rippledagent'))
-    shutil.copyfile(BINARY, os.path.join(build_directory, 'usr', 'bin', 'rippledagent'))
+    shutil.copyfile(BINARY, os.path.join(build_directory, 'opt', 'valmond', 'valmond'))
+    shutil.copyfile(BINARY, os.path.join(build_directory, 'usr', 'bin', 'valmond'))
 
 
-    os.makedirs(os.path.join(build_directory, "var", 'log', 'rippledagent'))
-    # os.chmod(os.path.join(build_directory, "var", 'log', 'rippledagent'), 755)
+    os.makedirs(os.path.join(build_directory, "var", 'log', 'valmond'))
+    # os.chmod(os.path.join(build_directory, "var", 'log', 'valmond'), 755)
 
 
     # # /var/run permissions for RPM distros
     os.makedirs(os.path.join(build_directory, "usr", 'lib', 'tmpfiles.d'))
     shutil.copyfile(
-        os.path.join(packaging_directory, 'tmpfilesd_rippledagent.conf'),
-        os.path.join(build_directory, 'usr', 'lib', 'tmpfiles.d', 'rippledagent.conf')
+        os.path.join(packaging_directory, 'tmpfilesd_valmond.conf'),
+        os.path.join(build_directory, 'usr', 'lib', 'tmpfiles.d', 'valmond.conf')
     )
 
 
-    os.makedirs(os.path.join(build_directory, "opt", 'rippledagent', 'scripts'))
+    os.makedirs(os.path.join(build_directory, "opt", 'valmond', 'scripts'))
     shutil.copyfile(
         os.path.join(packaging_directory, 'init.sh'),
-        os.path.join(build_directory, 'opt', 'rippledagent', 'scripts', 'init.sh')
+        os.path.join(build_directory, 'opt', 'valmond', 'scripts', 'init.sh')
     )
 
     shutil.copyfile(
-        os.path.join(packaging_directory, 'rippledagent.service'),
-        os.path.join(build_directory, 'opt', 'rippledagent', 'scripts', 'rippledagent.service')
+        os.path.join(packaging_directory, 'valmond.service'),
+        os.path.join(build_directory, 'opt', 'valmond', 'scripts', 'valmond.service')
     )
 
     shutil.copyfile(
-        os.path.join(packaging_directory, 'rippledagent.cfg'),
-        os.path.join(build_directory, 'etc', 'opt', 'rippledagent', 'rippledagent.cfg')
+        os.path.join(packaging_directory, 'valmond.cfg'),
+        os.path.join(build_directory, 'etc', 'opt', 'valmond', 'valmond.cfg')
     )
 
 
@@ -114,11 +112,11 @@ def fpm_build(arch=None, output=None):
         '--chdir {0}'.format(build_directory),
         '--maintainer "XRPL Packages <packages@xrpl-labs.com>"',
         '--url "http://xrpl-labs.com/"',
-        '--description "Rippled monitoring agent"',
+        '--description "XRPL Validator monitoring agent"',
         '--version {0}'.format(get_version()),
-        '--conflicts "rippledagent < {0}"'.format(get_version()),
+        '--conflicts "valmond < {0}"'.format(get_version()),
         '--vendor XRPL-Labs',
-        '--name rippledagent',
+        '--name valmond',
         '--depends "curl"',
         '--architecture "{0}"'.format(arch),
         '--post-install {0}'.format(os.path.join(packaging_directory, 'postinst.sh')),

@@ -1,28 +1,28 @@
 #!/usr/bin/env bash
 
 # chkconfig: 2345 95 05
-# description: Rippled agent - collects system and process information.
-# processname: rippledagent
-# pidfile: /var/run/rippledagent/rippledagent.pid
+# description: Valmond agent - collects system and process information.
+# processname: valmond
+# pidfile: /var/run/valmond/valmond.pid
 
 
 ### BEGIN INIT INFO
-# Provides:          rippledagent
+# Provides:          valmond
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Starts the Rippled agent
-# Description:       Rippled agent - collects system and rippled information.
+# Short-Description: Starts the Valmond agent
+# Description:       Valmond agent - collects system and validator metrics.
 ### END INIT INFO
 
-DAEMON='/usr/bin/rippledagent'
-USER="rippledagent"
-NAME="rippledagent"
-GROUP="rippledagent"
-PIDFILE="/var/run/rippledagent/rippledagent.pid"
+DAEMON='/usr/bin/valmond'
+USER="valmond"
+NAME="valmond"
+GROUP="valmond"
+PIDFILE="/var/run/valmond/valmond.pid"
 PIDPATH=`dirname $PIDFILE`
-CONFIG="/etc/opt/rippledagent/rippledagent.conf"
+CONFIG="/etc/opt/valmond/valmond.conf"
 
 [ -f $AGENTPATH ] || echo "$AGENTPATH not found"
 
@@ -35,7 +35,7 @@ fi
 # always set the permissions on start
 chown -R $USER:$GROUP $PIDPATH
 
-DEFAULT=/etc/default/rippledagent
+DEFAULT=/etc/default/valmond
 
 if [ -r $DEFAULT ]; then
     source $DEFAULT
@@ -58,7 +58,7 @@ if [ ! -f "$STDOUT" ]; then
 fi
 
 if [ -z "$STDERR" ]; then
-    STDERR=/var/log/rippledagent/rippledagent.log
+    STDERR=/var/log/valmond/valmond.log
 fi
 
 if [ ! -f "$STDERR" ]; then

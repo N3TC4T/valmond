@@ -1,82 +1,82 @@
 #!/bin/bash
 
-LOG_DIR=/var/log/rippledagent
-SCRIPT_DIR=/opt/rippledagent/scripts/
-HOME_DIR=/home/rippledagent
+LOG_DIR=/var/log/valmond
+SCRIPT_DIR=/opt/valmond/scripts/
+HOME_DIR=/home/valmond
 
 function install_init {
-    cp -f $SCRIPT_DIR/init.sh /etc/init.d/rippledagent
-    chmod +x /etc/init.d/rippledagent
+    cp -f $SCRIPT_DIR/init.sh /etc/init.d/valmond
+    chmod +x /etc/init.d/valmond
 
-    echo "### You can start rippledagent by executing"
+    echo "### You can start valmond by executing"
     echo ""
-    echo " sudo service rippledagent start"
+    echo " sudo service valmond start"
     echo ""
     echo "###"
 }
 
 function install_systemd {
-    cp -f $SCRIPT_DIR/rippledagent.service /lib/systemd/system/rippledagent.service
-    systemctl enable rippledagent || true
+    cp -f $SCRIPT_DIR/valmond.service /lib/systemd/system/valmond.service
+    systemctl enable valmond || true
     systemctl daemon-reload || true
-    echo "### You can start rippledagent by executing"
+    echo "### You can start valmond by executing"
     echo ""
-    echo "sudo systemctl start rippledagent.service"
+    echo "sudo systemctl start valmond.service"
     echo ""
     echo "###"
 }
 
 function install_update_rcd {
-    update-rc.d rippledagent defaults
+    update-rc.d valmond defaults
 }
 
 function install_chkconfig {
-    chkconfig --add rippledagent
+    chkconfig --add valmond
 }
 
-id rippledagent &>/dev/null
+id valmond &>/dev/null
 if [[ $? -ne 0 ]]; then
-    useradd --system --user-group --key USERGROUPS_ENAB=yes -M rippledagent --shell /bin/false -d /etc/opt/rippledagent
+    useradd --system --user-group --key USERGROUPS_ENAB=yes -M valmond --shell /bin/false -d /etc/opt/valmond
 fi
 
 
 test -d $LOG_DIR || mkdir -p $LOG_DIR
-chown -R -L rippledagent:rippledagent $LOG_DIR
+chown -R -L valmond:valmond $LOG_DIR
 chmod 755 $LOG_DIR
 
 
 # Create a dummy home directory, Sensu plugins need this for some reason
 test -d $HOME_DIR || mkdir -p $HOME_DIR
-chown -R -L rippledagent:rippledagent $HOME_DIR
+chown -R -L valmond:valmond $HOME_DIR
 
 # Remove legacy symlink, if it exists
-if [[ -L /etc/init.d/rippledagent ]]; then
-    rm -f /etc/init.d/rippledagent
+if [[ -L /etc/init.d/valmond ]]; then
+    rm -f /etc/init.d/valmond
 fi
 
 # Add defaults file, if it doesn't exist
-if [[ ! -f /etc/default/rippledagent ]]; then
-    touch /etc/default/rippledagent
+if [[ ! -f /etc/default/valmond ]]; then
+    touch /etc/default/valmond
 fi
 
 # Make sure the config directory exists
-if [ ! -d /etc/opt/rippledagent ]; then
-    mkdir -p /etc/opt/rippledagent
+if [ ! -d /etc/opt/valmond ]; then
+    mkdir -p /etc/opt/valmond
 fi
 
 
 # Make sure the pid directory exists
-if [ ! -d /var/run/rippledagent ]; then
-    mkdir -p /var/run/rippledagent
+if [ ! -d /var/run/valmond ]; then
+    mkdir -p /var/run/valmond
 fi
 
-chown -R -L rippledagent:rippledagent  /var/run/rippledagent
-chmod 775 /var/run/rippledagent
+chown -R -L valmond:valmond  /var/run/valmond
+chmod 775 /var/run/valmond
 
 
 # Make sure the binary is executable
-chmod +x /usr/bin/rippledagent
-chmod +x /opt/rippledagent/rippledagent
+chmod +x /usr/bin/valmond
+chmod +x /opt/valmond/valmond
 
 
 # Distribution-specific logic
@@ -95,12 +95,12 @@ elif [[ -f /etc/debian_version ]]; then
     which systemctl &>/dev/null
     if [[ $? -eq 0 ]]; then
         install_systemd
-        systemctl restart rippledagent || echo "WARNING: systemd not running."
+        systemctl restart valmond || echo "WARNING: systemd not running."
     else
         # Assuming sysv
         install_init
         install_update_rcd
-        invoke-rc.d rippledagent restart
+        invoke-rc.d valmond restart
     fi
 elif [[ -f /etc/os-release ]]; then
     source /etc/os-release

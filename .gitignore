@@ -34,7 +34,7 @@
 # Packaging
 *.deb
 *.rpm
-rippledagent
 packaging/build/
 Packaging/distro/
+builds/bin
 build/

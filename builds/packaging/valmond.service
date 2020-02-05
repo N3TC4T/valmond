@@ -1,0 +1,16 @@
+[Unit]
+Description=Starts and stops valmond monitoring agent
+Documentation=https://www.xrpl-labs.com
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/default/valmond
+User=valmond
+ExecStart=/usr/bin/valmond
+PIDFile=/var/run/valmond/valmond.pid
+Restart=on-failure
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+Alias=valmond.service

@@ -9,11 +9,11 @@ Config* Config::instance = NULL;
 
 const std::string HEARTBEAT_INTERVAL = "heartbeat_interval";
 const std::string SERVER_URL = "server_url";
-const std::string RIPPLED_CONFIG = "rippled_config";
-const std::string RIPPLED_VALIDATOR_SECTION = "validator_token";
-const std::string RIPPLED_RPC_SECTION = "port_rpc_admin_local";
-const std::string RIPPELD_RPC_PORT = "port";
-const std::string RIPPLED_RPC_IP = "ip";
+const std::string VALIDATOR_CONFIG = "validator_config";
+const std::string VALIDATOR_TOKEN_SECTION = "validator_token";
+const std::string VALIDATOR_RPC_SECTION = "port_rpc_admin_local";
+const std::string VALIDATOR_RPC_PORT = "port";
+const std::string VALIDATOR_RPC_IP = "ip";
 
 std::string
 delSpaces(std::string& str)
@@ -45,8 +45,8 @@ Config::Config(std::string cfgFile)
     configFile = cfgFile;
     heartbeat_interval = 5;
     server_url = "";
-    rippled_rpc_port = "5005";
-    rippled_rpc_ip = "127.0.0.1";
+    validator_rpc_port = "5005";
+    validator_rpc_ip = "127.0.0.1";
     validation_secret_key = "";
 
     std::ifstream configFileStream{cfgFile};
@@ -78,9 +78,9 @@ Config::Config(std::string cfgFile)
             {
                 server_url = propertyValue;
             }
-            else if (propertyName.compare(RIPPLED_CONFIG) == 0)
+            else if (propertyName.compare(VALIDATOR_CONFIG) == 0)
             {
-                rippled_config_path = propertyValue;
+                validator_config_path = propertyValue;
             }
         }
     }
@@ -89,16 +89,16 @@ Config::Config(std::string cfgFile)
     // validate the config properties
     validateProperties();
 
-    // get info from rippled config
-    std::ifstream rippledConfigFileStream{rippled_config_path};
-    if (!rippledConfigFileStream)
-        throw std::runtime_error("cannot open rippled config file " + rippled_config_path);
+    // get info from validator config
+    std::ifstream validatorConfigFileStream{validator_config_path};
+    if (!validatorConfigFileStream)
+        throw std::runtime_error("cannot open validator config file " + validator_config_path);
 
     std::string strSection;
     std::stringstream validatorToken;
 
     std::string strValue;
-    while (std::getline(rippledConfigFileStream, strValue))
+    while (std::getline(validatorConfigFileStream, strValue))
     {
         if (strValue.empty() || strValue[0] == '#')
         {
@@ -114,11 +114,11 @@ Config::Config(std::string cfgFile)
             // Another line for Section.
             if (!strValue.empty())
             {
-                if (strSection == RIPPLED_VALIDATOR_SECTION)
+                if (strSection == VALIDATOR_TOKEN_SECTION)
                 {
                     validatorToken << strValue;
                 }
-                else if (strSection == RIPPLED_RPC_SECTION)
+                else if (strSection == VALIDATOR_RPC_SECTION)
                 {
                     int delimeterPostion = strValue.find("=");
                     std::string propertyName = strValue.substr(0, delimeterPostion);
@@ -128,20 +128,20 @@ Config::Config(std::string cfgFile)
                     propertyName = delSpaces(propertyName);
                     propertyValue = delSpaces(propertyValue);
 
-                    if (propertyName.compare(RIPPLED_RPC_IP) == 0)
+                    if (propertyName.compare(VALIDATOR_RPC_IP) == 0)
                     {
-                        rippled_rpc_ip = propertyValue;
+                        validator_rpc_ip = propertyValue;
                     }
-                    else if (propertyName.compare(RIPPELD_RPC_PORT) == 0)
+                    else if (propertyName.compare(VALIDATOR_RPC_PORT) == 0)
                     {
-                        rippled_rpc_port = propertyValue;
+                        validator_rpc_port = propertyValue;
                     }
                 }
             }
         }
     }
 
-    rippledConfigFileStream.close();
+    validatorConfigFileStream.close();
 
     // decode validator_token
     Json::Value jsonMainfest;
@@ -157,7 +157,7 @@ Config::Config(std::string cfgFile)
     }
     else
     {
-        throw std::runtime_error("Cannot load validation secret key from rippled config.");
+        throw std::runtime_error("Cannot load validation secret key from validator config.");
     }
 }
 
@@ -188,7 +188,7 @@ void
 Config::validateProperties()
 {
     // check mendatory properties
-    if (server_url.size() == 0 || rippled_config_path.size() == 0)
+    if (server_url.size() == 0 || validator_config_path.size() == 0)
     {
         throw std::invalid_argument("Missing required properties!");
     }
@@ -210,15 +210,15 @@ Config::getServerURL()
 }
 
 std::string
-Config::getRippledConfigPath()
+Config::getValidatorConfigPath()
 {
-    return rippled_config_path;
+    return validator_config_path;
 }
 
 std::string
-Config::getRippledRpcUrl()
+Config::getValidatorRpcUrl()
 {
-    return rippled_rpc_ip + rippled_rpc_port;
+    return validator_rpc_ip + validator_rpc_port;
 }
 
 std::string

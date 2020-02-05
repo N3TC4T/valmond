@@ -25,4 +25,4 @@ cmake $ROOT "$@"
 cmake --build .
 
 echo -e "\n${GREEN}[-] Build success!${NC}"
-echo -e "${GREEN}[-] Output >> bin/rippledagent ${NC}"
+echo -e "${GREEN}[-] Output >> bin/valmond ${NC}"

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(agent_cpp VERSION "0.1.2")
+project(valmond_agent VERSION "0.1.2")
 
 SET (LINUX true)
 
@@ -10,8 +10,8 @@ SET (CMAKE_CXX_FLAGS "-std=c++11 -fopenmp -Wall -fpermissive ${CMAKE_CXX_FLAGS}"
 
 # Version
 configure_file (
-    "${PROJECT_SOURCE_DIR}/src/agentd/version.h.in"
-    "${PROJECT_BINARY_DIR}/src/agentd/version.hpp"
+    "${PROJECT_SOURCE_DIR}/src/valmond/version.h.in"
+    "${PROJECT_BINARY_DIR}/src/valmond/version.hpp"
     )
 
 # Output path
@@ -19,7 +19,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/builds/bin")
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/builds/bin)
 
 # Version
-include_directories("${PROJECT_BINARY_DIR}/src/agentd/")
+include_directories("${PROJECT_BINARY_DIR}/src/valmond/")
 
 # deps
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/builds/deps")

@@ -14,11 +14,22 @@
 #include "version.hpp"
 
 const std::string USAGE_MESSAGE{
-    "USAGE: ./agent [sign <content>] [-c/--config <config file path>] [-h / --help]"};
+    "USAGE: valmond [sign <content>] [-c/--config <config file path>] [-h / --help]"};
 const std::string HELP_ARGUMENT = "help";
+const std::string VERSION_ARGUMENT = "help";
 const std::string CONFIG_FILE_PATH_ARGUMENT = "configFilePath";
 const std::string SIGN_MESSAGE_ARGUMENT = "signCommand";
-const std::string DEFAULT_CONFIG_FILE = "/etc/opt/rippledagent/rippledagent.cfg";
+const std::string DEFAULT_CONFIG_FILE = "/etc/opt/valmond/valmond.cfg";
+
+void
+printHelp()
+{
+    std::cout << "Valmond agent " << PROJECT_VER << std::endl;
+    std::cout << "System and XRPL validator monitoring" << std::endl;
+    std::cout << std::endl;
+    std::cout << USAGE_MESSAGE << std::endl;
+    std::cout << std::endl;
+}
 
 void
 startAgent(Config* config)
@@ -26,7 +37,7 @@ startAgent(Config* config)
     // start the agent
 
     const auto start = std::time(nullptr);
-    std::cout << "[!] Starting Agent version " << PROJECT_VER << " at "
+    std::cout << "[!] Starting Valmond version " << PROJECT_VER << " at "
               << std::put_time(std::localtime(&start), "%c %Z") << std::endl;
     std::cout << std::endl;
 
@@ -76,15 +87,26 @@ main(int argc, char** argv)
                 arguments.insert(std::make_pair(CONFIG_FILE_PATH_ARGUMENT, argv[count + 1]));
                 count = count + 2;
             }
-            if (element.compare("sign") == 0 && (count + 2) <= argc)
+            else if (element.compare("sign") == 0 && (count + 2) <= argc)
             {
                 arguments.insert(std::make_pair(SIGN_MESSAGE_ARGUMENT, argv[count + 1]));
                 count = count + 2;
+            }
+            else if (element.compare("-h") == 0 || element.compare("--help") == 0)
+            {
+                arguments.insert(std::make_pair(HELP_ARGUMENT, "true"));
+                count++;
             }
             else
             {
                 throw std::invalid_argument(USAGE_MESSAGE);
             }
+        }
+
+        if (arguments.count(HELP_ARGUMENT) == 1 && arguments[HELP_ARGUMENT] == "true")
+        {
+            printHelp();
+            exit(0);
         }
 
         if (arguments.count(CONFIG_FILE_PATH_ARGUMENT) == 1)

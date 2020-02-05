@@ -1,14 +1,18 @@
-# rippled-agent
-> Rippled Monitoring Agent
+# Valmond
+> XRPL Validator Monitoring Agent
 
 ## What
- The Rippled Monitoring Agent is a lightweight process that monitors system
- metrics and rippled validator and sends information back to monitoring backend.
+ The Valmond is a lightweight process/service that monitors system
+ metrics and XRPL validator and sends information back to monitoring backend.
 
 
 ## Install
 
-**Install the XRPL Labs RPM repository:**
+
+<details>
+<summary>CentOS/Red Hat</summary>
+<br>
+**Install the XRPL-Labs RPM repository:**
 
 ```
 cat << REPOFILE | sudo tee /etc/yum.repos.d/xrpl-labs.repo
@@ -29,20 +33,26 @@ REPOFILE
 sudo yum -y update
 ```
 
-**Install the new agent package:**
+**Install the agent package:**
 
 ```
-sudo yum install rippledagent
+sudo yum install valmond
 ```
 
 **Enable and start the service:**
 
 ```
-sudo systemctl enable rippledagent.service
-sudo systemctl start rippledagent.service
+sudo systemctl enable valmond.service
+sudo systemctl start valmond.service
 ```
 
+</details>
 
+<details>
+<summary>Ubuntu/Debian</summary>
+<br>
+Will release in the debian package repository
+</details>
 
 
 ## Build Instructions
@@ -56,14 +66,29 @@ sudo apt install git \
                  libcurl-dev
 
 # download the source and build
-git clone https://github.com/N3TC4T/rippled-agent.git
+git clone https://github.com/N3TC4T/valmond.git
+cd valmond
 git submodule update --init --recursive
-mkdir rippled-agent/build
+mkdir build
 cd $_
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 
 ```
+
+
+## CLI
+
+```
+USAGE: ./valmond [sign <content>] [-c/--config <config file path>] [-h / --help]
+```
+
+Sign a message with your validator token
+
+```
+/usr/bin/valmond sing [message]
+```
+
 
 ## License
 Released under the terms of the MIT license. See `LICENSE` for more

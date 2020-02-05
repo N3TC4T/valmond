@@ -58,14 +58,14 @@ runProcessCheck()
     Json::Value result;
 
     result["exit_code"] = 2;
-    result["output"] = "Check Proccess CRITICAL: Found 0 matching rippled process";
+    result["output"] = "Check Proccess CRITICAL: Found 0 matching validator process";
     result["command"] = "CheckProcess";
 
     // find the proccess
     if (pid > -1)
     {
         result["exit_code"] = 0;
-        result["output"] = "Check Proccess OK: Found process blong to rippled";
+        result["output"] = "Check Proccess OK: Found process blong to validator";
         result["command"] = "CheckProcess";
     }
 

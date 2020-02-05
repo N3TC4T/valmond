@@ -1,24 +1,24 @@
 #!/bin/bash
 
 function disable_systemd {
-    systemctl disable rippledagent
-    rm -f /lib/systemd/system/rippledagent.service
+    systemctl disable valmond
+    rm -f /lib/systemd/system/valmond.service
 }
 
 function disable_update_rcd {
-    update-rc.d -f rippledagent remove
-    rm -f /etc/init.d/rippledagent
+    update-rc.d -f valmond remove
+    rm -f /etc/init.d/valmond
 }
 
 function disable_chkconfig {
-    chkconfig --del rippledagent
-    rm -f /etc/init.d/rippledagent
+    chkconfig --del valmond
+    rm -f /etc/init.d/valmond
 }
 
 if [[ -f /etc/redhat-release ]]; then
     # RHEL-variant logic
     if [[ "$1" = "0" ]]; then
-	rm -f /etc/default/rippledagent
+	rm -f /etc/default/valmond
 
 	which systemctl &>/dev/null
 	if [[ $? -eq 0 ]]; then
@@ -32,7 +32,7 @@ elif [[ -f /etc/debian_version ]]; then
     # Debian/Ubuntu logic
     if [[ "$1" != "upgrade" ]]; then
 	# Remove/purge
-	rm -f /etc/default/rippledagent
+	rm -f /etc/default/valmond
 
 	which systemctl &>/dev/null
 	if [[ $? -eq 0 ]]; then

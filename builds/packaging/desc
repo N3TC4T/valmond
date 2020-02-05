@@ -1,5 +1,5 @@
-Rippled Monitoring Agent
- The Rippled Monitoring Agent is a lightweight process that monitors system
- metrics and rippled validator and sends information back to monitoring backend.
+Valmond Agent
+ The Valmond Agent is a lightweight process that monitors system
+ metrics and xrpl validator and sends information back to monitoring backend.
  .
  See http://xrpl-labs.com/ for more information
