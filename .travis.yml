@@ -7,6 +7,12 @@ before_install:
 - echo $LANG
 - echo $LC_ALL
 - sudo apt-get update
-- sudo apt-get install -y g++-7 cmake-data cmake e2fslibs-dev libblkid-dev libcurl-dev
+ # Install libcurl, since Travis doesn't support install libcurl-dev for Linux
+- mkdir -p $HOME/.local/bin $HOME/.local/include $HOME/.local/lib
+- export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.local/lib
+- travis_retry wget https://github.com/bagder/curl/releases/download/curl-7_44_0/curl-7.44.0.tar.gz
+- tar xvf curl-7.44.0.tar.gz
+- (cd curl-7.44.0/ && ./configure --prefix=$HOME/.local/ && make && make install)
+- sudo apt-get install -y g++-7 cmake-data cmake e2fslibs-dev libblkid-dev
 script:
 - ./builds/binary.sh
