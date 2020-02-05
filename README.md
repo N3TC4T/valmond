@@ -1,4 +1,6 @@
 # Valmond
+[![Build Status](https://travis-ci.org/N3TC4T/valmond.svg?branch=master)](https://travis-ci.org/N3TC4T/valmond)
+
 > XRPL Validator Monitoring Agent
 
 ## What
