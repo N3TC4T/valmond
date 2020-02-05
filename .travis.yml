@@ -1,0 +1,29 @@
+language: cpp
+sudo: required
+dist: bionic
+compiler:
+- clang
+os:
+- linux
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test george-edison55-precise-backports
+          packages:
+            - g++-7
+						- cmake-data
+						- cmake
+						- e2fslibs-dev
+						- libblkid-dev
+						- libcurl-dev
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+before_install:
+    - eval "${MATRIX_EVAL}"
+		- echo $LANG
+    - echo $LC_ALL
+script:
+- ./builds/binary.sh
