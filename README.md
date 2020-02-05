@@ -12,6 +12,7 @@
 <details>
 <summary>CentOS/Red Hat</summary>
 <br>
+
 **Install the XRPL-Labs RPM repository:**
 
 ```
@@ -86,7 +87,7 @@ USAGE: ./valmond [sign <content>] [-c/--config <config file path>] [-h / --help]
 Sign a message with your validator token
 
 ```
-/usr/bin/valmond sing [message]
+/usr/bin/valmond sign [message]
 ```
 
 
