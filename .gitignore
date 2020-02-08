@@ -38,3 +38,6 @@ packaging/build/
 Packaging/distro/
 builds/bin
 build/
+
+# other
+all.sh
