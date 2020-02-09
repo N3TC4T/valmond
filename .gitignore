@@ -34,10 +34,10 @@
 # Packaging
 *.deb
 *.rpm
-packaging/build/
-Packaging/distro/
+builds/packaging/build/
+builds/packaging/distro/
 builds/bin
-build/
+builds/build/
 
 # other
 all.sh

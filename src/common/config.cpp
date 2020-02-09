@@ -218,7 +218,7 @@ Config::getValidatorConfigPath()
 std::string
 Config::getValidatorRpcUrl()
 {
-    return validator_rpc_ip + validator_rpc_port;
+    return validator_rpc_ip + ":" + validator_rpc_port;
 }
 
 std::string

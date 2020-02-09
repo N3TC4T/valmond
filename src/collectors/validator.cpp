@@ -4,6 +4,8 @@
 
 #include "common/http.hpp"
 
+#include "common/config.hpp"
+
 namespace collectors {
 namespace validator {
 
@@ -12,15 +14,20 @@ namespace validator {
 Json::Value
 getFromRPC()
 {
+    Config* config = Config::getInstance();
+
     // rpc url
-    const std::string url("127.0.0.1:5005");
+    const std::string url = config->getValidatorRpcUrl();
+
+    // command
+    const std::string command("{\"id\":\"json\",\"method\":\"server_info\"}");
 
     Json::Value result;
     Http::Response httpResponse;
 
     // make an http instance
     Http http(url);
-    httpResponse = http.GET();
+    httpResponse = http.POST(command);
 
     if (httpResponse.success == true)
     {
