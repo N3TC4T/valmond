@@ -37,8 +37,10 @@ Agent::sendData(std::string data)
 int
 Agent::beat()
 {
+
+    Json::Value report;
     // collect data
-    auto report = collectors::all::collectAllData();
+    auto data = collectors::all::collectAllData();
 
     LOG(INFO) << "Metrics Collected / Next Interval: " << config->getHeartbeatInterval() << " Sec";
 
@@ -49,17 +51,18 @@ Agent::beat()
 
     // sign collected data
     auto const secret = config->getValidationSecret();
-    const std::string reportStrBeforeSignature = Json::writeString(builder, report);
+    const std::string dataStr = Json::writeString(builder, data);
     auto secretKey = crypto::SecretKey(secret);
-    auto signature = crypto::Signature(secretKey, reportStrBeforeSignature);
+    auto signature = crypto::Signature(secretKey, dataStr);
 
     // convert signature to string
     std::stringstream sstream;
     sstream << signature;
     std::string signatureString = sstream.str();
 
-    // add signature to the data
+    // add signature to the report
     report["signature"] = signatureString;
+    report["raw"] = dataStr;
 
     // convert the whole report to str
     std::string reportStr = Json::writeString(builder, report);
