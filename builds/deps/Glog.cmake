@@ -12,13 +12,20 @@ ExternalProject_Add(project_glog
     -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
 )
 
+get_property(LIB64 GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS)
+if(LIB64)
+ set(LIBSUFFIX 64)
+else()
+ set(LIBSUFFIX "")
+endif()
+
 # Create glog imported library
 ExternalProject_Get_Property(project_glog INSTALL_DIR)
 add_library(glog STATIC IMPORTED)
 add_dependencies(glog project_glog)
 
 set(GLOG_INCLUDE_DIR ${INSTALL_DIR}/include)
-set(GLOG_LIBRARY ${INSTALL_DIR}/lib/libglog.a)
+set(GLOG_LIBRARY ${INSTALL_DIR}/lib${LIBSUFFIX}/libglog.a)
 
 file(MAKE_DIRECTORY ${GLOG_INCLUDE_DIR})
 set_target_properties(glog PROPERTIES
