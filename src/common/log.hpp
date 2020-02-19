@@ -3,7 +3,7 @@
 #include "glog/logging.h"
 #include <string.h>
 
-const std::string LOG_PATH = "/var/log/testloooog";
+const std::string LOG_PATH = "/var/log/valmond/";
 
 inline void
 LogInit(const char* argv)
