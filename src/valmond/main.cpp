@@ -9,6 +9,7 @@
 
 // Utils
 #include "common/daemon.hpp"
+#include "common/log.hpp"
 
 // version
 #include "version.hpp"
@@ -74,6 +75,9 @@ main(int argc, char** argv)
     std::map<std::string, std::string> arguments;
     std::string configFile = DEFAULT_CONFIG_FILE;
     std::string signMessage;
+
+    // init logging
+    LogInit(argv[0]);
 
     try
     {

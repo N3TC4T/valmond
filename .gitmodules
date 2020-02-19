@@ -13,3 +13,6 @@
 [submodule "builds/deps/src/cryptopp-cmake"]
 	path = builds/deps/src/cryptopp-cmake
 	url = https://github.com/noloader/cryptopp-cmake
+[submodule "builds/deps/src/glog"]
+	path = builds/deps/src/glog
+	url = https://github.com/google/glog

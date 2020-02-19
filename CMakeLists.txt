@@ -26,6 +26,7 @@ set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/builds/
 include(Cryptopp)
 include(Secp256k1)
 include(Jsoncpp)
+include(Glog)
 
 # main source directory
 add_subdirectory(src)

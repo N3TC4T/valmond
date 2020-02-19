@@ -54,7 +54,8 @@ getInterfaces()
     getifaddrs(&ifap);
     for (ifa = ifap; ifa; ifa = ifa->ifa_next)
     {
-        if (ifa->ifa_addr->sa_family == AF_INET && 0 == (ifa->ifa_flags & IFF_LOOPBACK))
+        if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET &&
+            0 == (ifa->ifa_flags & IFF_LOOPBACK))
         {
             validInterfaces.push_back(ifa->ifa_name);
         }

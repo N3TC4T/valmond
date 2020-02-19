@@ -8,6 +8,7 @@
 
 // common
 #include "common/http.hpp"
+#include "common/log.hpp"
 
 Agent::Agent(Config* cfg) : config(cfg)
 {
@@ -29,7 +30,7 @@ Agent::sendData(std::string data)
 
     if (!resp.success)
     {
-        std::cout << "Send data error: " << resp.error << std::endl;
+        LOG(WARNING) << "Send report error - " << resp.error << std::endl;
     }
 }
 
@@ -39,7 +40,7 @@ Agent::beat()
     // collect data
     auto report = collectors::all::collectAllData();
 
-    std::cout << "Metrics collected Interval: " << config->getHeartbeatInterval() << std::endl;
+    LOG(INFO) << "Metrics Collected / Next Interval: " << config->getHeartbeatInterval() << " Sec";
 
     // json string convertor
     Json::StreamWriterBuilder builder;
