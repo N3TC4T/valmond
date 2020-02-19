@@ -108,7 +108,7 @@ getHostInfo()
     result["host"] = hostname;
 
     // get matchin ip address
-    result["ip_address"] = getIPAddress();
+    // result["ip_address"] = getIPAddress();
 
     return result;
 };
