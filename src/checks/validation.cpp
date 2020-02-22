@@ -110,10 +110,44 @@ runValidationCheck()
         }
     }
 
+    // io_latency_ms should be very low, otherwise validator
+    // probably having serious load issues
+    // <= 1 ok
+    // > 1 warning
+    // > 2 CRITICAL
+    Json::Value ioLatencyCheck;
+    ioLatencyCheck["command"] = "IOLatency";
+
+    if (serverInfo.empty())
+    {
+        ioLatencyCheck["exit_code"] = 2;
+        ioLatencyCheck["output"] =
+            "Check IO Latency CRITICAL: Cannot get server_info from rpc or crawl";
+    }
+    else
+    {
+        if (serverInfo["io_latency_ms"] <= 1)
+        {
+            ioLatencyCheck["exit_code"] = 0;
+            ioLatencyCheck["output"] = "Check IO Latency OK: IO Latency is less than 1 ms";
+        }
+        else if (serverInfo["io_latency_ms"] > 1 && serverInfo["io_latency_ms"] <=2 )
+        {
+            ioLatencyCheck["exit_code"] = 1;
+            ioLatencyCheck["output"] = "Check IO Latency WARNING: IO Latency is greater than 1 ms";
+        }
+        else
+        {
+            ioLatencyCheck["exit_code"] = 2;
+            ioLatencyCheck["output"] = "Check IOLatency CRITICAL: validator having serious load issues.";
+        }
+    }
+
     // append result
     result.append(serverStateCheck);
     result.append(lastValidationCheck);
     result.append(peersCheck);
+    result.append(ioLatencyCheck);
 
     return result;
 }
