@@ -30,19 +30,16 @@ Agent::sendData(std::string data)
 
     if (!resp.success)
     {
-        LOG(WARNING) << "Send report error - " << resp.error << std::endl;
+        LOG_WARN << "Send report error - " << resp.error << std::endl;
     }
 }
 
 int
 Agent::beat()
 {
-
     Json::Value report;
     // collect data
     auto data = collectors::all::collectAllData();
-
-    LOG(INFO) << "Metrics Collected / Next Interval: " << config->getHeartbeatInterval() << " Sec";
 
     // json string convertor
     Json::StreamWriterBuilder builder;

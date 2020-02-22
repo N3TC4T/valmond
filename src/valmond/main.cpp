@@ -40,6 +40,7 @@ startAgent(Config* config)
     const auto start = std::time(nullptr);
     std::cout << "[!] Starting Valmond version " << PROJECT_VER << " at "
               << std::put_time(std::localtime(&start), "%c %Z") << std::endl;
+    std::cout << "[+] Metrics collect Interval: " << config->getHeartbeatInterval() << " Sec";
     std::cout << std::endl;
 
     // get an instance from Heartbeat
