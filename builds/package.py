@@ -110,8 +110,8 @@ def fpm_build(arch=None, output=None):
         '--input-type dir',
         '--output-type {0}'.format(output),
         '--chdir {0}'.format(build_directory),
-        '--maintainer "XRPL Packages <packages@xrpl-labs.com>"',
-        '--url "http://xrpl-labs.com/"',
+        '--maintainer "XRPL Labs <packages@xrpl-labs.com>"',
+        '--url "https://xrpl-labs.com/"',
         '--description "XRPL Validator monitoring agent"',
         '--version {0}'.format(get_version()),
         '--conflicts "valmond < {0}"'.format(get_version()),
@@ -125,7 +125,7 @@ def fpm_build(arch=None, output=None):
     ]
 
     if output == 'deb':
-        command.extend(['--depends "adduser"'])
+        command.extend(['--depends "libcurl3"'])
 
     command_string = " ".join(command)
     run(command_string, shell=True)
