@@ -125,7 +125,7 @@ def fpm_build(arch=None, output=None):
     ]
 
     if output == 'deb':
-        command.extend(['--depends "libcurl3"'])
+        command.extend(['--depends "libcurl3 | libcurl4"'])
 
     command_string = " ".join(command)
     run(command_string, shell=True)
