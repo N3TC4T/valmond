@@ -38,6 +38,7 @@ builds/packaging/build/
 builds/packaging/distro/
 builds/bin
 builds/build/
+builds/deps/src/
 
 # other
 all.sh
