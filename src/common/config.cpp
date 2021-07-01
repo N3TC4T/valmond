@@ -1,7 +1,7 @@
 #include "config.hpp"
 
 #include <fstream>
-
+#include <memory>
 #include "crypto/base64.hpp"
 
 bool Config::instanceFlag = false;
@@ -146,7 +146,7 @@ Config::Config(std::string cfgFile)
     // decode validator_token
     Json::Value jsonMainfest;
     Json::CharReaderBuilder builder;
-    Json::CharReader* reader = builder.newCharReader();
+    std::unique_ptr<Json::CharReader> reader { builder.newCharReader() };
     std::string errs;
 
     std::string decoded = crypto::base64_decode(validatorToken.str());
