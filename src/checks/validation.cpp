@@ -98,10 +98,10 @@ runValidationCheck()
             peersCheck["exit_code"] = 0;
             peersCheck["output"] = "Check Peer count OK: Peer count is greater than 7";
         }
-        else if (serverInfo["peers"] < 5 && serverInfo["peers"] != 0)
+        else if (serverInfo["peers"] <= 7 && serverInfo["peers"] > 0)
         {
             peersCheck["exit_code"] = 1;
-            peersCheck["output"] = "Check Peer count WARNING: Peer count is less than 5";
+            peersCheck["output"] = "Check Peer count WARNING: Peer count is less than or equal to 7";
         }
         else
         {
