@@ -111,9 +111,8 @@ getDiskInfo()
     blkid_dev dev;
     blkid_cache cache = NULL;
     char *search_type = NULL, *search_value = NULL;
-    char* read = NULL;
 
-    blkid_get_cache(&cache, read);
+    blkid_get_cache(&cache, "/dev/null");
 
     blkid_probe_all(cache);
 
@@ -149,7 +148,7 @@ getDiskInfo()
         }
     }
     blkid_dev_iterate_end(iter);
-    free(cache);
+    blkid_put_cache(cache);
 
     return result;
 };

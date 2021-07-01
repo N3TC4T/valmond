@@ -1,6 +1,7 @@
 #include "http.hpp"
 
 #include <iostream>
+#include <memory>
 
 Http::Http(std::string host) : url(host), timeout(10)
 {
@@ -16,7 +17,7 @@ Http::handleResponse(std::string* httpData, CURLcode res, long HttpCode)
 
     Json::Value jsonData;
     Json::CharReaderBuilder builder;
-    Json::CharReader* reader = builder.newCharReader();
+    std::unique_ptr<Json::CharReader> reader { builder.newCharReader() };
     std::string errs;
 
     if (HttpCode == 200 && res == CURLE_OK)
@@ -60,6 +61,7 @@ Http::handleResponse(std::string* httpData, CURLcode res, long HttpCode)
         response.error = error.str();
     }
 
+    
     return response;
 }
 
