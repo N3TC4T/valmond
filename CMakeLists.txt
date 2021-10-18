@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(valmond_agent VERSION "0.1.5")
+project(valmond_agent VERSION "0.1.8")
 
 SET (LINUX true)
 

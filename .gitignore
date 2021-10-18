@@ -41,4 +41,4 @@ builds/build/
 builds/deps/src/
 
 # other
-all.sh
+publish.sh
